@@ -10,28 +10,39 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private  static final String TAG = "MainActivity";
-    private TextView theDate;
+    private static final String TAG = "MainActivity";
+    private TextView dateLabel;
 
-    private Button btnGoCalendar;
+    private Button calendarView;
+    private Button allTasksView;
+
+    private Intent allTasksIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        theDate = (TextView) findViewById(R.id.date);
-        btnGoCalendar = (Button) findViewById(R.id.btnGoCalendar);
+
+        dateLabel = (TextView) findViewById(R.id.date);
+        calendarView = (Button) findViewById(R.id.btnGoCalendar);
+        allTasksView = (Button) findViewById(R.id.allTasks);
+
+        allTasksIntent = new Intent(MainActivity.this, AllTasksActivity.class);
 
         Intent incomingIntent = getIntent();
         String date = incomingIntent.getStringExtra("date");
-        theDate.setText(date);
+        dateLabel.setText(date);
 
-        btnGoCalendar.setOnClickListener(new View.OnClickListener(){
+        calendarView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
                 startActivity(intent);
             }
+        });
+
+        allTasksView.setOnClickListener((click) -> {
+            MainActivity.this.startActivity(allTasksIntent);
         });
     }
 }
