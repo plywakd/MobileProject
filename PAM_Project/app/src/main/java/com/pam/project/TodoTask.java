@@ -37,7 +37,7 @@ public class TodoTask {
     }
 
     public void setChecked(boolean checked) {
-        checked = checked;
+        this.checked = checked;
     }
 
     public LocalDate getDueDate() {
@@ -46,5 +46,14 @@ public class TodoTask {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    @Override
+    public String toString() {
+        return "TodoTask{" +
+                "taskDescription='" + taskDescription + '\'' +
+                ", checked=" + checked +
+                ", dueDate=" + dueDate +
+                '}';
     }
 }

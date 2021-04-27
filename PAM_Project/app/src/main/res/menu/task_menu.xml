@@ -4,10 +4,10 @@
     <item
         android:id="@+id/action_add"
         android:icon="@drawable/add_icon"
-        app:showAsAction="ifRoom"
-        android:title="Add"></item>
+        android:title="Add"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_settings"
-        app:showAsAction="never"
-        android:title="Settings"></item>
+        android:title="Settings"
+        app:showAsAction="never" />
 </menu>
