@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">pam_redesign</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">TODOs</string>
+    <string name="second_fragment_label">Calendar</string>
+    <string name="next">Move to Calendar</string>
+    <string name="previous">Back</string>
+    <string name="input_desc">Description</string>
+    <string name="input_input_due_date">Due date</string>
+    <string name="input_repetition">Repeat</string>
+    <string name="enable_repeat">No/Yes</string>
+    <string name="addNewTodo">Add Task</string>
+
+    <string name="hello_first_fragment">Show here todays tasks!</string>
+
+    <!-- SPINNER ARRAY-->
+    <string-array name="repetitionOption">
+        <item>Select</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Quarterly</item>
+    </string-array>
+</resources>
