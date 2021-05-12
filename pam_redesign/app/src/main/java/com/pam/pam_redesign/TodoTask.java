@@ -22,6 +22,13 @@ public class TodoTask {
         this.repetition = repetition;
     }
 
+    public TodoTask(boolean done, LocalDate dueDate, String description, String repetition) {
+        this.done = done;
+        this.dueDate = dueDate;
+        this.description = description;
+        this.repetition = repetition;
+    }
+
     public boolean isDone() {
         return done;
     }

@@ -28,6 +28,7 @@ public class AddTodoFragment extends Fragment {
 
     private FragmentAddTodoBinding binding;
     final Calendar myCalendar = Calendar.getInstance();
+    public TodoDBService dbService;
 
     private String repeatOption;
     private LocalDate todoDueDate;
@@ -37,6 +38,7 @@ public class AddTodoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAddTodoBinding.inflate(inflater, container, false);
+        dbService = new TodoDBService(binding.getRoot().getContext());
         return binding.getRoot();
     }
 
@@ -60,8 +62,7 @@ public class AddTodoFragment extends Fragment {
                 if (LocalDate.now().compareTo(choosenDate) > 0) {
                     Snackbar.make(binding.getRoot().getRootView(), "Please choose today or future date", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
-                }
-                else{
+                } else {
                     binding.inputDate.setText(choosenDate.toString());
                     todoDueDate = choosenDate;
                 }
@@ -100,11 +101,12 @@ public class AddTodoFragment extends Fragment {
 
         binding.addNewTodo.setOnClickListener((click) -> {
             TodoTask taskToSave;
-            if(repeatOption.equals("Select")){
+            if (repeatOption.equals("Select")) {
                 taskToSave = new TodoTask(todoDueDate, binding.inputDescription.getText().toString());
-            }
-            else{
+                dbService.addData(0, todoDueDate.toString(), binding.inputDescription.getText().toString(), "");
+            } else {
                 taskToSave = new TodoTask(todoDueDate, repeatOption, binding.inputDescription.getText().toString());
+                dbService.addData(0, todoDueDate.toString(), binding.inputDescription.getText().toString(), repeatOption);
             }
             System.out.println(taskToSave.toString());
             NavHostFragment.findNavController(AddTodoFragment.this)

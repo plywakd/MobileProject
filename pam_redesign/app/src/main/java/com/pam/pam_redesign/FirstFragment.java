@@ -1,5 +1,6 @@
 package com.pam.pam_redesign;
 
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,11 +16,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.pam.pam_redesign.databinding.FragmentFirstBinding;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
+    public TodoDBService dbService;
+    ArrayList<TodoTask> todayTaskList;
 
     @Override
     public View onCreateView(
@@ -28,6 +32,7 @@ public class FirstFragment extends Fragment {
     ) {
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
+        dbService = new TodoDBService(binding.getRoot().getContext());
         return binding.getRoot();
 
     }
@@ -36,17 +41,22 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<TodoTask> testTasks = new ArrayList<TodoTask>();
-        testTasks.add(new TodoTask(LocalDate.now(), "Today task"));
-        testTasks.add(new TodoTask(LocalDate.now(), "Today task 2 ", "weekly"));
+        todayTaskList = new ArrayList<TodoTask>();
+        TodoTaskAdapter<TodoTask> adapt = new TodoTaskAdapter<TodoTask>(this.binding.getRoot().getContext(), todayTaskList);
+        Cursor dbCursor = dbService.getData();
+        while (dbCursor.moveToNext()) {
+            boolean isDone = (dbCursor.getInt(1) != 0);
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), format);
+            todayTaskList.add(new TodoTask(isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
+        }
 
-        TodoTaskAdapter<TodoTask> adapt = new TodoTaskAdapter<TodoTask>(this.binding.getRoot().getContext(), testTasks);
         binding.todayTasks.setAdapter(adapt);
         binding.todayTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 System.out.println(position);
-                TodoTask clickedTask = testTasks.get((int)id);
+                TodoTask clickedTask = todayTaskList.get((int) id);
                 System.out.println(position + ", " + id);
 //                listItem.setDone(!listItem.isDone());
 //                System.out.println(listItem.isDone());
