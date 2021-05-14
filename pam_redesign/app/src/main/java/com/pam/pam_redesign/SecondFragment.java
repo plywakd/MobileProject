@@ -1,5 +1,6 @@
 package com.pam.pam_redesign;
 
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,10 +24,13 @@ import java.util.ArrayList;
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
-    public ArrayList<String> tasks;
-    private ArrayAdapter<String> adapter;
-    private LocalDate selectedDate;
+    public TodoDBService dbService;
+    public ArrayList<TodoTask> tasks;
+    private ArrayAdapter<TodoTask> adapter;
+    public DateTimeFormatter format;
+    private String selectedDate;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -34,6 +38,10 @@ public class SecondFragment extends Fragment {
     ) {
 
         binding = FragmentSecondBinding.inflate(inflater, container, false);
+        dbService = new TodoDBService(binding.getRoot().getContext());
+        format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        selectedDate = LocalDate.now().format(format);
+        tasks = new ArrayList<TodoTask>();
         return binding.getRoot();
 
     }
@@ -45,23 +53,19 @@ public class SecondFragment extends Fragment {
         binding.calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
-
-//                String date = day + "/" + (month + 1) + "/" + year; // month 0-11
-//                System.out.println(date);
-//                DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d/MM/yyyy");
-//                selectedDate = LocalDate.parse(date, dateFormat);
-                selectedDate = LocalDate.of(year,month+1,day);
-//                TODO load tasks on date selected? or filter them here?
+                tasks = new ArrayList<TodoTask>();
+                selectedDate = LocalDate.of(year, month + 1, day).format(format);
+                Cursor dbCursor = dbService.getDataByDate(selectedDate);
+                while (dbCursor.moveToNext()) {
+                    boolean isDone = (dbCursor.getInt(1) != 0);
+                    LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), format);
+                    tasks.add(new TodoTask(isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
+                }
+                adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks);
+                binding.tasksForDateView.setAdapter(adapter);
             }
         });
 
-//        TODO test tasks -> read from memory/storage/db and filter them by selectedDate
-        ArrayList<TodoTask> testTasks = new ArrayList<TodoTask>();
-        testTasks.add(new TodoTask(LocalDate.now(), "New adapter"));
-        testTasks.add(new TodoTask(LocalDate.now(), "New adapter", "weekly"));
-
-        TodoTaskAdapter<TodoTask> adapt = new TodoTaskAdapter<TodoTask>(this.binding.getRoot().getContext(), testTasks);
-        binding.tasksForDateView.setAdapter(adapt);
         binding.tasksForDateView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -61,7 +61,7 @@ public class TodoDBService extends SQLiteOpenHelper {
 
     public Cursor getDataByDate(String date) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE due_date=" + date;
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE due_date= '" + date + "' ";
         return db.rawQuery(query, null);
     }
 

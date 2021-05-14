@@ -23,8 +23,10 @@ public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     public TodoDBService dbService;
+    public DateTimeFormatter format;
     ArrayList<TodoTask> todayTaskList;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -33,6 +35,7 @@ public class FirstFragment extends Fragment {
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         dbService = new TodoDBService(binding.getRoot().getContext());
+        format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return binding.getRoot();
 
     }
@@ -43,10 +46,15 @@ public class FirstFragment extends Fragment {
 
         todayTaskList = new ArrayList<TodoTask>();
         TodoTaskAdapter<TodoTask> adapt = new TodoTaskAdapter<TodoTask>(this.binding.getRoot().getContext(), todayTaskList);
-        Cursor dbCursor = dbService.getData();
+//      FOR TEST -> TO BE REMOVED IF NOT NEEDED
+//        Cursor dbCursorAllData = dbService.getData();
+//        while (dbCursorAllData.moveToNext()) {
+//            System.out.println(dbCursorAllData.getString(2));
+//        }
+        String formattedDate = LocalDate.now().format(format);
+        Cursor dbCursor = dbService.getDataByDate(formattedDate);
         while (dbCursor.moveToNext()) {
             boolean isDone = (dbCursor.getInt(1) != 0);
-            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), format);
             todayTaskList.add(new TodoTask(isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
         }
