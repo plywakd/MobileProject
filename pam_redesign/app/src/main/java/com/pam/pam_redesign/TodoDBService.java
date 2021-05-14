@@ -74,7 +74,7 @@ public class TodoDBService extends SQLiteOpenHelper {
     public void updateData(int id, int done, String date, String desc, String repetition) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = String.format("UPDATE %s SET done='%d', due_date='%s', description='%s', " +
-                "repetition='%s' WHERE receipt_id=%d", TABLE_NAME, done, date, desc, repetition, id);
+                "repetition='%s' WHERE todoTask_id=%d", TABLE_NAME, done, date, desc, repetition, id);
         db.execSQL(query);
     }
 }

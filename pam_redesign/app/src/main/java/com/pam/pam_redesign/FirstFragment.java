@@ -45,31 +45,27 @@ public class FirstFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         todayTaskList = new ArrayList<TodoTask>();
+        createRepeatTasks(todayTaskList);
         TodoTaskAdapter<TodoTask> adapt = new TodoTaskAdapter<TodoTask>(this.binding.getRoot().getContext(), todayTaskList);
 //      FOR TEST -> TO BE REMOVED IF NOT NEEDED
-//        Cursor dbCursorAllData = dbService.getData();
-//        while (dbCursorAllData.moveToNext()) {
-//            System.out.println(dbCursorAllData.getString(2));
-//        }
+        Cursor dbCursorAllData = dbService.getData();
+        while (dbCursorAllData.moveToNext()) {
+            System.out.println(dbCursorAllData.getString(0) + ","
+                    + dbCursorAllData.getString(1) + ","
+                    + dbCursorAllData.getString(2) + ","
+                    + dbCursorAllData.getString(3) + ","
+                    + dbCursorAllData.getString(4));
+        }
         String formattedDate = LocalDate.now().format(format);
         Cursor dbCursor = dbService.getDataByDate(formattedDate);
         while (dbCursor.moveToNext()) {
             boolean isDone = (dbCursor.getInt(1) != 0);
             LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), format);
-            todayTaskList.add(new TodoTask(isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
+//            TODO implement id in class for updates in other fragments
+            todayTaskList.add(new TodoTask(dbCursor.getInt(0),isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
         }
 
         binding.todayTasks.setAdapter(adapt);
-        binding.todayTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(position);
-                TodoTask clickedTask = todayTaskList.get((int) id);
-                System.out.println(position + ", " + id);
-//                listItem.setDone(!listItem.isDone());
-//                System.out.println(listItem.isDone());
-            }
-        });
 
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +80,14 @@ public class FirstFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void createRepeatTasks(ArrayList<TodoTask> todayTasks){
+//        TODO for each repeatable task in todays list, create one new instance if next one doesnt exist!
+        todayTasks.stream().filter((task) -> !task.getRepetition().equals("")).forEach((task)->{
+                System.out.println(task.toString());
+        });
     }
 
 }

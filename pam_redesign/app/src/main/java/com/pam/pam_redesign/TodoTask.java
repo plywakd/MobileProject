@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public class TodoTask {
 
+    private int dbId;
     private boolean done;
     private LocalDate dueDate;
     private String description;
@@ -23,6 +24,14 @@ public class TodoTask {
     }
 
     public TodoTask(boolean done, LocalDate dueDate, String description, String repetition) {
+        this.done = done;
+        this.dueDate = dueDate;
+        this.description = description;
+        this.repetition = repetition;
+    }
+
+    public TodoTask(int dbId, boolean done, LocalDate dueDate, String description, String repetition) {
+        this.dbId = dbId;
         this.done = done;
         this.dueDate = dueDate;
         this.description = description;
@@ -59,6 +68,14 @@ public class TodoTask {
 
     public void setRepetition(String repetition) {
         this.repetition = repetition;
+    }
+
+    public int getDbId() {
+        return dbId;
+    }
+
+    public void setDbId(int dbId) {
+        this.dbId = dbId;
     }
 
     @Override

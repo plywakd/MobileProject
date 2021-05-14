@@ -28,7 +28,6 @@ public class SecondFragment extends Fragment {
     public ArrayList<TodoTask> tasks;
     private ArrayAdapter<TodoTask> adapter;
     public DateTimeFormatter format;
-    private String selectedDate;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -40,8 +39,9 @@ public class SecondFragment extends Fragment {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
         dbService = new TodoDBService(binding.getRoot().getContext());
         format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        selectedDate = LocalDate.now().format(format);
-        tasks = new ArrayList<TodoTask>();
+        tasks = fetchTaskForDate(LocalDate.now().format(format));
+        adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks);
+        binding.tasksForDateView.setAdapter(adapter);
         return binding.getRoot();
 
     }
@@ -53,14 +53,8 @@ public class SecondFragment extends Fragment {
         binding.calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
-                tasks = new ArrayList<TodoTask>();
-                selectedDate = LocalDate.of(year, month + 1, day).format(format);
-                Cursor dbCursor = dbService.getDataByDate(selectedDate);
-                while (dbCursor.moveToNext()) {
-                    boolean isDone = (dbCursor.getInt(1) != 0);
-                    LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), format);
-                    tasks.add(new TodoTask(isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
-                }
+                String selectedDate = LocalDate.of(year, month + 1, day).format(format);
+                tasks = fetchTaskForDate(selectedDate);
                 adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks);
                 binding.tasksForDateView.setAdapter(adapter);
             }
@@ -90,6 +84,18 @@ public class SecondFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<TodoTask> fetchTaskForDate(String date){
+        ArrayList<TodoTask> fetchedTasks = new ArrayList<TodoTask>();
+        Cursor dbCursor = dbService.getDataByDate(date);
+        while (dbCursor.moveToNext()) {
+            boolean isDone = (dbCursor.getInt(1) != 0);
+            LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), format);
+            fetchedTasks.add(new TodoTask(isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
+        }
+        return fetchedTasks;
     }
 
 }
