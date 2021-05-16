@@ -17,10 +17,10 @@
             android:text="@string/input_desc"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintHorizontal_bias="0.108"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3" />
+            app:layout_constraintVertical_bias="0.397" />
 
         <TextView
             android:id="@+id/textView3"
@@ -66,7 +66,7 @@
             android:id="@+id/inputRepetition"
             android:layout_width="260dp"
             android:layout_height="30dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:entries="@array/repetitionOption"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.742"
@@ -76,7 +76,7 @@
         <EditText
             android:id="@+id/inputDescription"
             android:layout_width="360dp"
-            android:layout_height="180dp"
+            android:layout_height="120dp"
             android:layout_marginTop="12dp"
             android:ems="10"
             android:gravity="start|top"
@@ -86,10 +86,10 @@
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.49"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4"
-            app:layout_constraintVertical_bias="0.00" />
+            app:layout_constraintVertical_bias="0.046" />
 
         <Button
             android:id="@+id/addNewTodo"

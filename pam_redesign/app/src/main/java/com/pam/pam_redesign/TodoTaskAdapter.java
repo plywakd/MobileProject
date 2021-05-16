@@ -2,6 +2,7 @@ package com.pam.pam_redesign;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.*;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.fragment.NavHostFragment;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -76,11 +79,11 @@ public class TodoTaskAdapter<T> extends ArrayAdapter<TodoTask> implements View.O
         viewHolder.taskRepetition.setText(task.getRepetition());
 //       Maybe it is possible to click on ROW instead on all elements, or stay with clicking only checkbox?
         viewHolder.taskIsDone.setOnClickListener(this);
-//        viewHolder.taskDescription.setOnClickListener(this);
-//        viewHolder.taskRepetition.setOnClickListener(this);
+        viewHolder.taskDescription.setOnClickListener(this::onClickToEdit);
+        viewHolder.taskRepetition.setOnClickListener(this::onClickToEdit);
         viewHolder.taskIsDone.setTag(position);
-//        viewHolder.taskDescription.setTag(position);
-//        viewHolder.taskRepetition.setTag(position);
+        viewHolder.taskDescription.setTag(position);
+        viewHolder.taskRepetition.setTag(position);
 
         return rowView;
     }
@@ -92,5 +95,17 @@ public class TodoTaskAdapter<T> extends ArrayAdapter<TodoTask> implements View.O
         Object object = getItem(position);
         TodoTask dataModel = (TodoTask) object;
         dbService.updateData(dataModel.getDbId(), !dataModel.isDone() ? 1 : 0, dataModel.getDueDate().format(format), dataModel.getDescription(), dataModel.getRepetition());
+    }
+
+    public void onClickToEdit(View v) {
+        System.out.println("TEST" + v.getTag());
+        int position = (Integer) v.getTag();
+        Object object = getItem(position);
+        TodoTask dataModel = (TodoTask) object;
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("dbID", dataModel.getDbId());
+////How to run fragment from here?
+//        EditTodoFragment fragobj = new EditTodoFragment();
+//        fragobj.setArguments(bundle);
     }
 }

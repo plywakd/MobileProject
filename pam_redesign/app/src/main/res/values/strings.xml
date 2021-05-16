@@ -11,6 +11,7 @@
     <string name="input_repetition">Repeat</string>
     <string name="enable_repeat">No/Yes</string>
     <string name="addNewTodo">Add Task</string>
+    <string name="updateTodo">Update Task</string>
 
     <string name="hello_first_fragment">Show here todays tasks!</string>
 
@@ -22,4 +23,6 @@
         <item>Monthly</item>
         <item>Quarterly</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

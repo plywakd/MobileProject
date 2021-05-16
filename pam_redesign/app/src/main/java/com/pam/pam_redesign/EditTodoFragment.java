@@ -1,6 +1,7 @@
 package com.pam.pam_redesign;
 
 import android.app.DatePickerDialog;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -18,38 +19,46 @@ import android.widget.DatePicker;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.pam.pam_redesign.databinding.FragmentAddTodoBinding;
+import com.pam.pam_redesign.databinding.FragmentEditTodoBinding;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
-public class AddTodoFragment extends Fragment {
+public class EditTodoFragment extends Fragment {
 
-    private FragmentAddTodoBinding binding;
+    private FragmentEditTodoBinding binding;
     final Calendar myCalendar = Calendar.getInstance();
     public TodoDBService dbService;
 
     private String repeatOption;
+    public Integer taskID;
     public DateTimeFormatter stringDateFormat;
     private LocalDate todoDueDate;
+    public HashMap<String, Integer> repeatOptionsMap = new HashMap<String, Integer>() {{
+        put("Daily", 1);
+        put("Weekly", 2);
+        put("Monthly", 3);
+        put("Quarterly", 4);
+    }};
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentAddTodoBinding.inflate(inflater, container, false);
+        binding = FragmentEditTodoBinding.inflate(inflater, container, false);
         dbService = new TodoDBService(binding.getRoot().getContext());
         stringDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        todoDueDate = LocalDate.now();
-        binding.inputDate.setText(todoDueDate.format(stringDateFormat));
+        taskID = this.getArguments().getInt("dbID");
+        fetchTaskData(taskID);
         return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.inputRepetition.setVisibility(View.INVISIBLE);
 
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
@@ -82,13 +91,14 @@ public class AddTodoFragment extends Fragment {
             ).show();
         });
 
-        binding.isRepeatable.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                binding.inputRepetition.setVisibility(View.VISIBLE);
-            } else {
-                binding.inputRepetition.setVisibility(View.INVISIBLE);
+        binding.isRepeatable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    binding.inputRepetition.setVisibility(View.VISIBLE);
+                } else {
+                    binding.inputRepetition.setVisibility(View.INVISIBLE);
+                }
             }
-            repeatOption = "Select";
         });
 
         binding.inputRepetition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -103,18 +113,13 @@ public class AddTodoFragment extends Fragment {
             }
         });
 
-        binding.addNewTodo.setOnClickListener((click) -> {
-            TodoTask taskToSave;
+        binding.updateTodo.setOnClickListener((click) -> {
             if (repeatOption.equals("Select")) {
-                taskToSave = new TodoTask(todoDueDate, binding.inputDescription.getText().toString());
-                dbService.addData(0, todoDueDate.toString(), binding.inputDescription.getText().toString(), "");
-            } else {
-                taskToSave = new TodoTask(todoDueDate, repeatOption, binding.inputDescription.getText().toString());
-                dbService.addData(0, todoDueDate.toString(), binding.inputDescription.getText().toString(), repeatOption);
+                repeatOption = "";
             }
-            System.out.println(taskToSave.toString());
-            NavHostFragment.findNavController(AddTodoFragment.this)
-                    .navigate(R.id.action_addTodoFragment_to_FirstFragment);
+            dbService.updateData(taskID, 0, todoDueDate.toString(), binding.inputDescription.getText().toString(), repeatOption);
+            NavHostFragment.findNavController(EditTodoFragment.this)
+                    .navigate(R.id.action_editTodoFragment_to_FirstFragment);
         });
 
     }
@@ -123,5 +128,25 @@ public class AddTodoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void fetchTaskData(Integer taskId) {
+//        TODO if editing repeatable object we need to update next instances
+        Cursor foundTask = dbService.getDataById(taskId);
+        if (foundTask.moveToNext()) {
+            todoDueDate = LocalDate.parse(foundTask.getString(2));
+            binding.inputDate.setText(foundTask.getString(2));
+            binding.inputDescription.setText(foundTask.getString(3));
+            Integer repetitionOptionPosition = 0;
+            if (!foundTask.getString(4).equals("")) {
+                repeatOption = foundTask.getString(4);
+                repetitionOptionPosition = repeatOptionsMap.get(repeatOption);
+                binding.isRepeatable.setChecked(true);
+            } else {
+                binding.inputRepetition.setVisibility(View.INVISIBLE);
+            }
+            binding.inputRepetition.setSelection(repetitionOptionPosition);
+        }
     }
 }

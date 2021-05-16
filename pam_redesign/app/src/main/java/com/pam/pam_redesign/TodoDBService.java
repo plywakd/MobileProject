@@ -80,7 +80,7 @@ public class TodoDBService extends SQLiteOpenHelper {
 
     public Cursor getDataById(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT FROM " + TABLE_NAME + " WHERE todoTask_id=" + id;
+        String query = String.format("SELECT * FROM %s WHERE todoTask_id=%d", TABLE_NAME, id);
         return db.rawQuery(query, null);
     }
 
