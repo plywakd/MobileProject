@@ -87,13 +87,13 @@ public class SecondFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public ArrayList<TodoTask> fetchTaskForDate(String date){
+    public ArrayList<TodoTask> fetchTaskForDate(String date) {
         ArrayList<TodoTask> fetchedTasks = new ArrayList<TodoTask>();
         Cursor dbCursor = dbService.getDataByDate(date);
         while (dbCursor.moveToNext()) {
             boolean isDone = (dbCursor.getInt(1) != 0);
             LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), format);
-            fetchedTasks.add(new TodoTask(isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
+            fetchedTasks.add(new TodoTask(dbCursor.getInt(0), isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
         }
         return fetchedTasks;
     }

@@ -91,10 +91,6 @@ public class TodoTaskAdapter<T> extends ArrayAdapter<TodoTask> implements View.O
         int position = (Integer) v.getTag();
         Object object = getItem(position);
         TodoTask dataModel = (TodoTask) object;
-        System.out.println(v.getId());
-        System.out.println(dataModel.toString());
-//        How to get correct DB id of task model selected? especially needed on repeated tasks lol
-        int id = 0;
-        dbService.updateData(id, !dataModel.isDone() ? 1 : 0, dataModel.getDueDate().format(format), dataModel.getDescription(), dataModel.getRepetition());
+        dbService.updateData(dataModel.getDbId(), !dataModel.isDone() ? 1 : 0, dataModel.getDueDate().format(format), dataModel.getDescription(), dataModel.getRepetition());
     }
 }
