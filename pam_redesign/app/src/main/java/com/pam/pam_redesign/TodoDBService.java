@@ -77,4 +77,16 @@ public class TodoDBService extends SQLiteOpenHelper {
                 "repetition='%s' WHERE todoTask_id=%d", TABLE_NAME, done, date, desc, repetition, id);
         db.execSQL(query);
     }
+
+    public Cursor getDataById(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT FROM " + TABLE_NAME + " WHERE todoTask_id=" + id;
+        return db.rawQuery(query, null);
+    }
+
+    public Cursor getDataByParams(String date, String desc, String repetition) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = String.format("SELECT * FROM %s WHERE due_date='%s' AND description='%s' AND repetition='%s'", TABLE_NAME, date, desc, repetition);
+        return db.rawQuery(query, null);
+    }
 }
