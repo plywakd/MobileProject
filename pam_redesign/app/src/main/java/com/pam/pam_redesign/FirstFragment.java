@@ -84,7 +84,6 @@ public class FirstFragment extends Fragment {
         while (dbCursor.moveToNext()) {
             boolean isDone = (dbCursor.getInt(1) != 0);
             LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), stringDateFormat);
-//            TODO implement id in class for updates in other fragments
             todayTaskList.add(new TodoTask(dbCursor.getInt(0), isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
         }
 

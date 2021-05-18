@@ -39,7 +39,19 @@ public class SecondFragment extends Fragment {
         dbService = new TodoDBService(binding.getRoot().getContext());
         stringDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         tasks = fetchTaskForDate(LocalDate.now().format(stringDateFormat));
-        adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks);
+        adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks) {
+            @Override
+            public void onClickToEdit(View v) {
+                super.onClickToEdit(v);
+                int position = (Integer) v.getTag();
+                Object object = getItem(position);
+                TodoTask dataModel = (TodoTask) object;
+                Bundle bundle = new Bundle();
+                bundle.putInt("dbID", dataModel.getDbId());
+                NavHostFragment.findNavController(SecondFragment.this)
+                        .navigate(R.id.action_SecondFragment_to_editTodoFragment, bundle);
+            }
+        };
         binding.tasksForDateView.setAdapter(adapter);
         return binding.getRoot();
 
@@ -54,7 +66,19 @@ public class SecondFragment extends Fragment {
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
                 String selectedDate = LocalDate.of(year, month + 1, day).format(stringDateFormat);
                 tasks = fetchTaskForDate(selectedDate);
-                adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks);
+                adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks){
+                    @Override
+                    public void onClickToEdit(View v) {
+                        super.onClickToEdit(v);
+                        int position = (Integer) v.getTag();
+                        Object object = getItem(position);
+                        TodoTask dataModel = (TodoTask) object;
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("dbID", dataModel.getDbId());
+                        NavHostFragment.findNavController(SecondFragment.this)
+                                .navigate(R.id.action_SecondFragment_to_editTodoFragment, bundle);
+                    }
+                };
                 binding.tasksForDateView.setAdapter(adapter);
             }
         });

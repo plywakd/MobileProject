@@ -12,8 +12,9 @@
     <string name="enable_repeat">No/Yes</string>
     <string name="addNewTodo">Add Task</string>
     <string name="updateTodo">Update Task</string>
+    <string name="deleteTodo">Delete Task</string>
 
-    <string name="hello_first_fragment">Show here todays tasks!</string>
+    <string name="hello_first_fragment">Show here today tasks!</string>
 
     <!-- SPINNER ARRAY-->
     <string-array name="repetitionOption">

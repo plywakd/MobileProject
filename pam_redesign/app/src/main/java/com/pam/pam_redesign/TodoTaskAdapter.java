@@ -98,7 +98,6 @@ public class TodoTaskAdapter<T> extends ArrayAdapter<TodoTask> implements View.O
     }
 
     public void onClickToEdit(View v) {
-        System.out.println("TEST" + v.getTag());
         int position = (Integer) v.getTag();
         Object object = getItem(position);
         TodoTask dataModel = (TodoTask) object;
