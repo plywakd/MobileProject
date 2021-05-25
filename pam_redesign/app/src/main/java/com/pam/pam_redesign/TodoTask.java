@@ -8,7 +8,7 @@ public class TodoTask {
     private boolean done;
     private LocalDate dueDate;
     private String description;
-    private String repetition;
+    private Integer repeatOptionInDays;
 
     public TodoTask(LocalDate dueDate, String description) {
         this.done = false;
@@ -16,26 +16,26 @@ public class TodoTask {
         this.description = description;
     }
 
-    public TodoTask(LocalDate dueDate, String description, String repetition) {
+    public TodoTask(LocalDate dueDate, String description, Integer repetition) {
         this.done = false;
         this.dueDate = dueDate;
         this.description = description;
-        this.repetition = repetition;
+        this.repeatOptionInDays = repetition;
     }
 
-    public TodoTask(boolean done, LocalDate dueDate, String description, String repetition) {
+    public TodoTask(boolean done, LocalDate dueDate, String description, Integer repetition) {
         this.done = done;
         this.dueDate = dueDate;
         this.description = description;
-        this.repetition = repetition;
+        this.repeatOptionInDays = repetition;
     }
 
-    public TodoTask(int dbId, boolean done, LocalDate dueDate, String description, String repetition) {
+    public TodoTask(int dbId, boolean done, LocalDate dueDate, String description, Integer repetition) {
         this.dbId = dbId;
         this.done = done;
         this.dueDate = dueDate;
         this.description = description;
-        this.repetition = repetition;
+        this.repeatOptionInDays = repetition;
     }
 
     public boolean isDone() {
@@ -62,12 +62,12 @@ public class TodoTask {
         this.description = description;
     }
 
-    public String getRepetition() {
-        return repetition;
+    public Integer getRepetition() {
+        return repeatOptionInDays;
     }
 
-    public void setRepetition(String repetition) {
-        this.repetition = repetition;
+    public void setRepetition(Integer repetition) {
+        this.repeatOptionInDays = repetition;
     }
 
     public int getDbId() {
@@ -84,7 +84,7 @@ public class TodoTask {
                 "done=" + done +
                 ", dueDate=" + dueDate +
                 ", description='" + description + '\'' +
-                ", repetition='" + repetition + '\'' +
+                ", repetition='" + repeatOptionInDays + '\'' +
                 '}';
     }
 }

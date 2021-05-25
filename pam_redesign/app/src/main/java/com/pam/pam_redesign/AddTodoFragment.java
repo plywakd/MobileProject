@@ -31,7 +31,7 @@ public class AddTodoFragment extends Fragment {
     final Calendar myCalendar = Calendar.getInstance();
     public TodoDBService dbService;
 
-    private String repeatOption;
+    private Integer repeatOptionInDays;
     public DateTimeFormatter stringDateFormat;
     private LocalDate todoDueDate;
 
@@ -88,30 +88,14 @@ public class AddTodoFragment extends Fragment {
             } else {
                 binding.inputRepetition.setVisibility(View.INVISIBLE);
             }
-            repeatOption = "Select";
         });
 
-        binding.inputRepetition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                repeatOption = binding.inputRepetition.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-//                TODO if needed
-            }
-        });
 
         binding.addNewTodo.setOnClickListener((click) -> {
             TodoTask taskToSave;
-            if (repeatOption.equals("Select")) {
-                taskToSave = new TodoTask(todoDueDate, binding.inputDescription.getText().toString());
-                dbService.addData(0, todoDueDate.toString(), binding.inputDescription.getText().toString(), "");
-            } else {
-                taskToSave = new TodoTask(todoDueDate, repeatOption, binding.inputDescription.getText().toString());
-                dbService.addData(0, todoDueDate.toString(), binding.inputDescription.getText().toString(), repeatOption);
-            }
+            repeatOptionInDays = Integer.parseInt(binding.inputRepetition.getText().toString());
+            taskToSave = new TodoTask(todoDueDate, binding.inputDescription.getText().toString(), repeatOptionInDays);
+            dbService.addData(0, todoDueDate.toString(), binding.inputDescription.getText().toString(), repeatOptionInDays);
             System.out.println(taskToSave.toString());
             NavHostFragment.findNavController(AddTodoFragment.this)
                     .navigate(R.id.action_addTodoFragment_to_FirstFragment);

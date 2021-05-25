@@ -12,10 +12,9 @@
 
     <TextView
         android:id="@+id/repetition"
-        android:layout_width="30pt"
+        android:layout_width="91dp"
         android:layout_height="wrap_content"
-        android:textSize="15sp">
-    </TextView>
+        android:textSize="15sp"></TextView>
 
     <TextView
         android:id="@+id/description"

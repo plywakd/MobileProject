@@ -28,15 +28,6 @@ public class FirstFragment extends Fragment {
     public TodoDBService dbService;
     public DateTimeFormatter stringDateFormat;
     private ArrayList<TodoTask> todayTaskList;
-    //    Map day -> 1 day, week -> 7 days, month -> 30 days, quarter -> 90 days
-//    More option to be implemented
-//    Maybe some dynamic range set support like: REPEAT EVERY [X] DAYS in view where X is input number
-    public HashMap<String, Integer> repeatOptionsMap = new HashMap<String, Integer>() {{
-        put("Daily", 1);
-        put("Weekly", 7);
-        put("Monthly", 30);
-        put("Quarterly", 90);
-    }};
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -77,14 +68,21 @@ public class FirstFragment extends Fragment {
                     + dbCursorAllData.getString(1) + ","
                     + dbCursorAllData.getString(2) + ","
                     + dbCursorAllData.getString(3) + ","
-                    + dbCursorAllData.getString(4));
+                    + dbCursorAllData.getInt(4));
         }
         String formattedDate = LocalDate.now().format(stringDateFormat);
         Cursor dbCursor = dbService.getDataByDate(formattedDate);
         while (dbCursor.moveToNext()) {
             boolean isDone = (dbCursor.getInt(1) != 0);
             LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), stringDateFormat);
-            todayTaskList.add(new TodoTask(dbCursor.getInt(0), isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
+            todayTaskList.add(new TodoTask(
+                            dbCursor.getInt(0),
+                            isDone,
+                            dueDate,
+                            dbCursor.getString(3),
+                            dbCursor.getInt(4)
+                    )
+            );
         }
 
         binding.todayTasks.setAdapter(adapt);
@@ -102,9 +100,9 @@ public class FirstFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void createRepeatTasks(ArrayList<TodoTask> todayTasks) {
-        todayTasks.stream().filter((task) -> !task.getRepetition().equals("")).forEach((task) -> {
-            String nextRepeatDateForTask = task.getDueDate().plusDays(repeatOptionsMap.get(task.getRepetition())).format(stringDateFormat);
-            System.out.println(repeatOptionsMap.get(task.getRepetition()) + "," + nextRepeatDateForTask);
+        todayTasks.stream().filter((task) -> task.getRepetition() != 0).forEach((task) -> {
+            String nextRepeatDateForTask = task.getDueDate().plusDays(task.getRepetition()).format(stringDateFormat);
+            System.out.println(task.getRepetition() + "," + nextRepeatDateForTask);
             Cursor foundTask = dbService.getDataByParams(nextRepeatDateForTask, task.getDescription(), task.getRepetition());
             if (!foundTask.moveToNext()) {
                 dbService.addData(0, nextRepeatDateForTask, task.getDescription(), task.getRepetition());

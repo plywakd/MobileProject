@@ -66,7 +66,7 @@ public class SecondFragment extends Fragment {
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
                 String selectedDate = LocalDate.of(year, month + 1, day).format(stringDateFormat);
                 tasks = fetchTaskForDate(selectedDate);
-                adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks){
+                adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks) {
                     @Override
                     public void onClickToEdit(View v) {
                         super.onClickToEdit(v);
@@ -105,7 +105,7 @@ public class SecondFragment extends Fragment {
         while (dbCursor.moveToNext()) {
             boolean isDone = (dbCursor.getInt(1) != 0);
             LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), stringDateFormat);
-            fetchedTasks.add(new TodoTask(dbCursor.getInt(0), isDone, dueDate, dbCursor.getString(3), dbCursor.getString(4)));
+            fetchedTasks.add(new TodoTask(dbCursor.getInt(0), isDone, dueDate, dbCursor.getString(3), dbCursor.getInt(4)));
         }
         return fetchedTasks;
     }

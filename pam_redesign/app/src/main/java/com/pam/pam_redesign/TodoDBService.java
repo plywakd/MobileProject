@@ -17,7 +17,7 @@ public class TodoDBService extends SQLiteOpenHelper {
     private static final String COL_2 = "done";   //there is no Boolean datatype instead Boolean values are stored as integers 0 (false) and 1 (true)
     private static final String COL_3 = "due_date";  //I think we should use text here
     private static final String COL_4 = "description";    //text
-    private static final String COL_5 = "repetition"; //text
+    private static final String COL_5 = "repetition"; //integer day value
 
     public TodoDBService(Context context) {
         super(context, TABLE_NAME, null, 1);
@@ -37,7 +37,12 @@ public class TodoDBService extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean addData(int done, String date, String desc, String repetition) {
+    public void clearDatabase() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NAME);
+    }
+
+    public boolean addData(int done, String date, String desc, Integer repetition) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2, done);
@@ -71,10 +76,10 @@ public class TodoDBService extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void updateData(int id, int done, String date, String desc, String repetition) {
+    public void updateData(int id, int done, String date, String desc, Integer repetition) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = String.format("UPDATE %s SET done='%d', due_date='%s', description='%s', " +
-                "repetition='%s' WHERE todoTask_id=%d", TABLE_NAME, done, date, desc, repetition, id);
+                "repetition='%d' WHERE todoTask_id=%d", TABLE_NAME, done, date, desc, repetition, id);
         db.execSQL(query);
     }
 
@@ -84,9 +89,9 @@ public class TodoDBService extends SQLiteOpenHelper {
         return db.rawQuery(query, null);
     }
 
-    public Cursor getDataByParams(String date, String desc, String repetition) {
+    public Cursor getDataByParams(String date, String desc, Integer repetition) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = String.format("SELECT * FROM %s WHERE due_date='%s' AND description='%s' AND repetition='%s'", TABLE_NAME, date, desc, repetition);
+        String query = String.format("SELECT * FROM %s WHERE due_date='%s' AND description='%s' AND repetition='%d'", TABLE_NAME, date, desc, repetition);
         return db.rawQuery(query, null);
     }
 }

@@ -76,8 +76,7 @@ public class TodoTaskAdapter<T> extends ArrayAdapter<TodoTask> implements View.O
 
         viewHolder.taskIsDone.setChecked(task.isDone());
         viewHolder.taskDescription.setText(task.getDescription());
-        viewHolder.taskRepetition.setText(task.getRepetition());
-//       Maybe it is possible to click on ROW instead on all elements, or stay with clicking only checkbox?
+        viewHolder.taskRepetition.setText(String.format("Every %d day/s", task.getRepetition()));
         viewHolder.taskIsDone.setOnClickListener(this);
         viewHolder.taskDescription.setOnClickListener(this::onClickToEdit);
         viewHolder.taskRepetition.setOnClickListener(this::onClickToEdit);
@@ -94,17 +93,18 @@ public class TodoTaskAdapter<T> extends ArrayAdapter<TodoTask> implements View.O
         int position = (Integer) v.getTag();
         Object object = getItem(position);
         TodoTask dataModel = (TodoTask) object;
-        dbService.updateData(dataModel.getDbId(), !dataModel.isDone() ? 1 : 0, dataModel.getDueDate().format(format), dataModel.getDescription(), dataModel.getRepetition());
+        dbService.updateData(
+                dataModel.getDbId(),
+                !dataModel.isDone() ? 1 : 0,
+                dataModel.getDueDate().format(format),
+                dataModel.getDescription(),
+                dataModel.getRepetition()
+        );
     }
 
     public void onClickToEdit(View v) {
         int position = (Integer) v.getTag();
         Object object = getItem(position);
         TodoTask dataModel = (TodoTask) object;
-//        Bundle bundle = new Bundle();
-//        bundle.putInt("dbID", dataModel.getDbId());
-////How to run fragment from here?
-//        EditTodoFragment fragobj = new EditTodoFragment();
-//        fragobj.setArguments(bundle);
     }
 }

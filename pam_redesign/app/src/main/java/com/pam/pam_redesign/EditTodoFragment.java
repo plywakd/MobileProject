@@ -34,22 +34,10 @@ public class EditTodoFragment extends Fragment {
     public TodoDBService dbService;
 
     private TodoTask originalTask;
-    private String repeatOption;
+    private Integer repeatOptionInDays;
     public Integer taskID;
     public DateTimeFormatter stringDateFormat;
     private LocalDate todoDueDate;
-    public HashMap<String, Integer> repeatOptionsMapSelector = new HashMap<String, Integer>() {{
-        put("Daily", 1);
-        put("Weekly", 2);
-        put("Monthly", 3);
-        put("Quarterly", 4);
-    }};
-    public HashMap<String, Integer> repeatOptionsMap = new HashMap<String, Integer>() {{
-        put("Daily", 1);
-        put("Weekly", 7);
-        put("Monthly", 30);
-        put("Quarterly", 90);
-    }};
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -60,7 +48,6 @@ public class EditTodoFragment extends Fragment {
         stringDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         taskID = this.getArguments().getInt("dbID");
         fetchTaskData(taskID);
-        System.out.println(originalTask.toString());
         return binding.getRoot();
     }
 
@@ -99,37 +86,22 @@ public class EditTodoFragment extends Fragment {
             } else {
                 binding.inputRepetition.setVisibility(View.INVISIBLE);
             }
-            repeatOption = "";
-            binding.inputRepetition.setSelection(0);
-        });
-
-        binding.inputRepetition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                repeatOption = binding.inputRepetition.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-//                TODO if needed
-            }
+            repeatOptionInDays = 0;
         });
 
         binding.updateTodo.setOnClickListener(click -> {
-            if (repeatOption.equals("Select")) {
-                repeatOption = "";
-            }
+            repeatOptionInDays = binding.inputRepetition.getText().toString().equals("") ? 0 : Integer.parseInt(binding.inputRepetition.getText().toString());
             dbService.updateData(
                     taskID,
                     0,
                     todoDueDate.toString(),
                     binding.inputDescription.getText().toString(),
-                    repeatOption
+                    repeatOptionInDays
             );
             editRepeatTask(
                     todoDueDate,
                     binding.inputDescription.getText().toString(),
-                    repeatOption
+                    repeatOptionInDays
             );
             NavHostFragment.findNavController(EditTodoFragment.this)
                     .navigate(R.id.action_editTodoFragment_to_FirstFragment);
@@ -156,54 +128,51 @@ public class EditTodoFragment extends Fragment {
             todoDueDate = LocalDate.parse(foundTask.getString(2));
             binding.inputDate.setText(foundTask.getString(2));
             binding.inputDescription.setText(foundTask.getString(3));
-            Integer repetitionOptionPosition = 0;
-            if (!foundTask.getString(4).equals("")) {
-                repeatOption = foundTask.getString(4);
-                repetitionOptionPosition = repeatOptionsMapSelector.get(repeatOption);
+            if (foundTask.getInt(4) != 0) {
+                repeatOptionInDays = foundTask.getInt(4);
                 binding.isRepeatable.setChecked(true);
+                System.out.println(repeatOptionInDays);
+                binding.inputRepetition.setText(repeatOptionInDays.toString());
             } else {
                 binding.inputRepetition.setVisibility(View.INVISIBLE);
             }
-            binding.inputRepetition.setSelection(repetitionOptionPosition);
             boolean isDone = (foundTask.getInt(1) != 0);
             originalTask = new TodoTask(
                     foundTask.getInt(0),
                     isDone,
                     todoDueDate,
                     foundTask.getString(3),
-                    foundTask.getString(4)
+                    foundTask.getInt(4)
             );
 
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void editRepeatTask(LocalDate taskDate, String description, String repetition) {
-        if (!repetition.equals("") && !originalTask.getRepetition().equals("")) {
-            String nextRepeatDateForTask = originalTask.getDueDate().plusDays(
-                    repeatOptionsMap.get(originalTask.getRepetition())
-            ).format(stringDateFormat);
+    public void editRepeatTask(LocalDate taskDate, String description, Integer repetition) {
+        if (repetition != 0 && originalTask.getRepetition() != 0) {
+            String nextRepeatDateForTask = originalTask.getDueDate()
+                    .plusDays(originalTask.getRepetition())
+                    .format(stringDateFormat);
             Cursor foundTask = dbService.getDataByParams(
                     nextRepeatDateForTask,
                     originalTask.getDescription(),
                     originalTask.getRepetition()
             );
-            String newDateForTask = taskDate.plusDays(
-                    repeatOptionsMap.get(repetition)
-            ).format(stringDateFormat);
+            String newDateForTask = taskDate.plusDays(repetition).format(stringDateFormat);
             if (foundTask.moveToNext()) {
                 dbService.updateData(
                         foundTask.getInt(0),
-                        0,
+                        foundTask.getInt(1),
                         newDateForTask,
                         description,
                         repetition
                 );
             }
-        } else if(!originalTask.getRepetition().equals("")){
-            String nextRepeatDateForTask = originalTask.getDueDate().plusDays(
-                    repeatOptionsMap.get(originalTask.getRepetition())
-            ).format(stringDateFormat);
+        } else if (originalTask.getRepetition() != 0) {
+            String nextRepeatDateForTask = originalTask.getDueDate()
+                    .plusDays(originalTask.getRepetition())
+                    .format(stringDateFormat);
             Cursor foundTask = dbService.getDataByParams(
                     nextRepeatDateForTask,
                     originalTask.getDescription(),
