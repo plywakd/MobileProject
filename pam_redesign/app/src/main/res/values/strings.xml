@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">pam_redesign</string>
+    <string name="app_name">TodoApp</string>
     <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
+
     <string name="first_fragment_label">TODOs</string>
     <string name="second_fragment_label">Calendar</string>
     <string name="next">Move to Calendar</string>
@@ -14,6 +14,9 @@
     <string name="updateTodo">Update Task</string>
     <string name="deleteTodo">Delete Task</string>
     <string name="repeatInfoText">Day/days</string>
+    <string name="todoIsDoneViewHeader">Done</string>
+    <string name="todoRepetitionViewHeader">Repeat</string>
+    <string name="todoDescriptionViewHeader">Description</string>
 
     <string name="hello_first_fragment">Show here today tasks!</string>
 </resources>

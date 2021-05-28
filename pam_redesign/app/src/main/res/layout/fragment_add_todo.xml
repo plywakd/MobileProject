@@ -98,10 +98,10 @@
             android:text="@string/enable_repeat"
             app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.105"
+            app:layout_constraintHorizontal_bias="0.047"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3"
-            app:layout_constraintVertical_bias="0.538" />
+            app:layout_constraintVertical_bias="0.094" />
 
         <EditText
             android:id="@+id/inputRepetition"
@@ -111,7 +111,7 @@
             android:layout_marginLeft="52dp"
             android:layout_marginTop="12dp"
             android:ems="10"
-            android:inputType="numberDecimal"
+            android:inputType="number"
             app:layout_constraintBottom_toTopOf="@+id/isRepeatable"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -126,9 +126,9 @@
             android:text="@string/repeatInfoText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.889"
+            app:layout_constraintHorizontal_bias="0.869"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.199" />
+            app:layout_constraintTop_toBottomOf="@+id/inputDate"
+            app:layout_constraintVertical_bias="0.062" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

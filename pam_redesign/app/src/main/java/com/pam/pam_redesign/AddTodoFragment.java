@@ -12,12 +12,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.pam.pam_redesign.databinding.FragmentAddTodoBinding;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -37,7 +37,7 @@ public class AddTodoFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAddTodoBinding.inflate(inflater, container, false);
         dbService = new TodoDBService(binding.getRoot().getContext());
@@ -60,17 +60,7 @@ public class AddTodoFragment extends Fragment {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-//               TODO maybe move to method:
-                String dateFormat = "yyyy-MM-dd";
-                SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.GERMAN);
-                LocalDate choosenDate = LocalDate.parse(formatter.format(myCalendar.getTime()));
-                if (LocalDate.now().compareTo(choosenDate) > 0) {
-                    Snackbar.make(binding.getRoot().getRootView(), "Please choose today or future date", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                } else {
-                    binding.inputDate.setText(choosenDate.toString());
-                    todoDueDate = choosenDate;
-                }
+                setTaskDateFromCalendarView();
             }
         };
 
@@ -92,13 +82,17 @@ public class AddTodoFragment extends Fragment {
 
 
         binding.addNewTodo.setOnClickListener((click) -> {
-            TodoTask taskToSave;
-            repeatOptionInDays = Integer.parseInt(binding.inputRepetition.getText().toString());
-            taskToSave = new TodoTask(todoDueDate, binding.inputDescription.getText().toString(), repeatOptionInDays);
-            dbService.addData(0, todoDueDate.toString(), binding.inputDescription.getText().toString(), repeatOptionInDays);
-            System.out.println(taskToSave.toString());
+            repeatOptionInDays = binding.inputRepetition.getText().toString().equals("")
+                    ? 0 : Integer.parseInt(binding.inputRepetition.getText().toString());
+
+            dbService.addData(
+                    0,
+                    todoDueDate.toString(),
+                    binding.inputDescription.getText().toString(),
+                    repeatOptionInDays
+            );
             NavHostFragment.findNavController(AddTodoFragment.this)
-                    .navigate(R.id.action_addTodoFragment_to_FirstFragment);
+                    .navigate(R.id.action_addTodoFragment_to_TodayTasksFragment);
         });
 
     }
@@ -107,5 +101,23 @@ public class AddTodoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setTaskDateFromCalendarView(){
+        String dateFormat = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.GERMAN);
+        LocalDate choosenDate = LocalDate.parse(formatter.format(myCalendar.getTime()));
+        if (LocalDate.now().compareTo(choosenDate) > 0) {
+            displayMessage("Please choose today or future date");
+        } else {
+            binding.inputDate.setText(choosenDate.toString());
+            todoDueDate = choosenDate;
+        }
+    }
+
+    public void displayMessage(String snackbarMessage) {
+        Snackbar.make(binding.getRoot().getRootView(), snackbarMessage, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 }

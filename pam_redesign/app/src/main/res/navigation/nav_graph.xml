@@ -3,32 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/TodayTasksFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.pam.pam_redesign.FirstFragment"
+        android:id="@+id/TodayTasksFragment"
+        android:name="com.pam.pam_redesign.TodayTasksFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_TodayTasksFragment_to_CalendarViewFragment"
+            app:destination="@id/CalendarViewFragment" />
         <action
-            android:id="@+id/action_FirstFragment_to_editTodoFragment"
+            android:id="@+id/action_TodayTasksFragment_to_editTodoFragment"
             app:destination="@id/editTodoFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.pam.pam_redesign.SecondFragment"
+        android:id="@+id/CalendarViewFragment"
+        android:name="com.pam.pam_redesign.CalendarViewFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_CalendarViewFragment_to_TodayTasksFragment"
+            app:destination="@id/TodayTasksFragment" />
         <action
-            android:id="@+id/action_SecondFragment_to_editTodoFragment"
+            android:id="@+id/action_CalendarViewFragment_to_editTodoFragment"
             app:destination="@id/editTodoFragment" />
     </fragment>
     <fragment
@@ -37,8 +37,8 @@
         android:label="fragment_add_todo"
         tools:layout="@layout/fragment_add_todo" >
         <action
-            android:id="@+id/action_addTodoFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_addTodoFragment_to_TodayTasksFragment"
+            app:destination="@id/TodayTasksFragment" />
     </fragment>
     <fragment
         android:id="@+id/editTodoFragment"
@@ -46,8 +46,8 @@
         android:label="fragment_edit_todo"
         tools:layout="@layout/fragment_edit_todo" >
         <action
-            android:id="@+id/action_editTodoFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_editTodoFragment_to_TodayTasksFragment"
+            app:destination="@id/TodayTasksFragment" />
     </fragment>
 
 </navigation>

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -24,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class EditTodoFragment extends Fragment {
@@ -59,20 +56,10 @@ public class EditTodoFragment extends Fragment {
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-//               TODO maybe move to method:
-            String dateFormat = "yyyy-MM-dd";
-            SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.GERMAN);
-            LocalDate choosenDate = LocalDate.parse(formatter.format(myCalendar.getTime()));
-            if (LocalDate.now().compareTo(choosenDate) > 0) {
-                Snackbar.make(binding.getRoot().getRootView(), "Please choose today or future date", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            } else {
-                binding.inputDate.setText(choosenDate.toString());
-                todoDueDate = choosenDate;
-            }
+            setTaskDateFromCalendarView();
         };
 
-        binding.inputDate.setOnClickListener((click) -> {
+        binding.inputDate.setOnClickListener((click)-> {
             new DatePickerDialog(this.binding.getRoot().getContext(), date, myCalendar
                     .get(Calendar.YEAR),
                     myCalendar.get(Calendar.MONTH),
@@ -90,10 +77,11 @@ public class EditTodoFragment extends Fragment {
         });
 
         binding.updateTodo.setOnClickListener(click -> {
-            repeatOptionInDays = binding.inputRepetition.getText().toString().equals("") ? 0 : Integer.parseInt(binding.inputRepetition.getText().toString());
+            repeatOptionInDays = binding.inputRepetition.getText().toString().equals("")
+                    ? 0 : Integer.parseInt(binding.inputRepetition.getText().toString());
             dbService.updateData(
                     taskID,
-                    0,
+                    originalTask.isDone() ? 1 : 0,
                     todoDueDate.toString(),
                     binding.inputDescription.getText().toString(),
                     repeatOptionInDays
@@ -104,13 +92,14 @@ public class EditTodoFragment extends Fragment {
                     repeatOptionInDays
             );
             NavHostFragment.findNavController(EditTodoFragment.this)
-                    .navigate(R.id.action_editTodoFragment_to_FirstFragment);
+                    .navigate(R.id.action_editTodoFragment_to_TodayTasksFragment);
         });
 
         binding.deleteTodo.setOnClickListener(click -> {
-            deleteTask(taskID, "Task successfuly deleted");
+            deleteTask(taskID);
+            displayMessage("Task successfuly deleted");
             NavHostFragment.findNavController(EditTodoFragment.this)
-                    .navigate(R.id.action_editTodoFragment_to_FirstFragment);
+                    .navigate(R.id.action_editTodoFragment_to_TodayTasksFragment);
         });
 
     }
@@ -125,26 +114,27 @@ public class EditTodoFragment extends Fragment {
     public void fetchTaskData(Integer taskId) {
         Cursor foundTask = dbService.getDataById(taskId);
         if (foundTask.moveToNext()) {
-            todoDueDate = LocalDate.parse(foundTask.getString(2));
-            binding.inputDate.setText(foundTask.getString(2));
-            binding.inputDescription.setText(foundTask.getString(3));
-            if (foundTask.getInt(4) != 0) {
-                repeatOptionInDays = foundTask.getInt(4);
+            System.out.println(foundTask.getInt(foundTask.getColumnIndex("todoTask_id")));
+            todoDueDate = LocalDate.parse(
+                    foundTask.getString(foundTask.getColumnIndex("due_date"))
+            );
+            boolean isDone = (foundTask.getInt(foundTask.getColumnIndex("done")) != 0);
+            originalTask = new TodoTask(
+                    foundTask.getInt(foundTask.getColumnIndex("todoTask_id")),
+                    isDone,
+                    todoDueDate,
+                    foundTask.getString(foundTask.getColumnIndex("description")),
+                    foundTask.getInt(foundTask.getColumnIndex("repetition"))
+            );
+            binding.inputDate.setText(originalTask.getDueDate().format(stringDateFormat));
+            binding.inputDescription.setText(originalTask.getDescription());
+            if (originalTask.getRepetition() != 0) {
+                repeatOptionInDays = originalTask.getRepetition();
                 binding.isRepeatable.setChecked(true);
-                System.out.println(repeatOptionInDays);
                 binding.inputRepetition.setText(repeatOptionInDays.toString());
             } else {
                 binding.inputRepetition.setVisibility(View.INVISIBLE);
             }
-            boolean isDone = (foundTask.getInt(1) != 0);
-            originalTask = new TodoTask(
-                    foundTask.getInt(0),
-                    isDone,
-                    todoDueDate,
-                    foundTask.getString(3),
-                    foundTask.getInt(4)
-            );
-
         }
     }
 
@@ -161,9 +151,10 @@ public class EditTodoFragment extends Fragment {
             );
             String newDateForTask = taskDate.plusDays(repetition).format(stringDateFormat);
             if (foundTask.moveToNext()) {
+                System.out.println("in edit repeat "+ foundTask.getInt(foundTask.getColumnIndex("todoTask_id")));
                 dbService.updateData(
-                        foundTask.getInt(0),
-                        foundTask.getInt(1),
+                        foundTask.getInt(foundTask.getColumnIndex("todoTask_id")),
+                        0,
                         newDateForTask,
                         description,
                         repetition
@@ -179,15 +170,32 @@ public class EditTodoFragment extends Fragment {
                     originalTask.getRepetition()
             );
             if (foundTask.moveToNext()) {
-                deleteTask(foundTask.getInt(0), "deleted future instance of repetited task");
+                deleteTask(foundTask.getInt(foundTask.getColumnIndex("todoTask_id")));
+                displayMessage("deleted future instance of repetited task");
             }
         }
     }
 
-    public void deleteTask(Integer taskToDeleteId, String snackbarMessage) {
+    public void deleteTask(Integer taskToDeleteId) {
         dbService.deleteById(taskToDeleteId);
+    }
+
+    public void displayMessage(String snackbarMessage) {
         Snackbar.make(binding.getRoot().getRootView(), snackbarMessage, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setTaskDateFromCalendarView(){
+        String dateFormat = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.GERMAN);
+        LocalDate choosenDate = LocalDate.parse(formatter.format(myCalendar.getTime()));
+        if (LocalDate.now().compareTo(choosenDate) > 0) {
+            displayMessage("Please choose today or future date");
+        } else {
+            binding.inputDate.setText(choosenDate.toString());
+            todoDueDate = choosenDate;
+        }
     }
 
 }

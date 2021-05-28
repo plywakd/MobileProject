@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.pam.pam_redesign.databinding.FragmentFirstBinding;
@@ -20,9 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class FirstFragment extends Fragment {
+public class TodayTasksFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     public TodoDBService dbService;
@@ -57,30 +55,24 @@ public class FirstFragment extends Fragment {
                 TodoTask dataModel = (TodoTask) object;
                 Bundle bundle = new Bundle();
                 bundle.putInt("dbID", dataModel.getDbId());
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_editTodoFragment, bundle);
+                NavHostFragment.findNavController(TodayTasksFragment.this)
+                        .navigate(R.id.action_TodayTasksFragment_to_editTodoFragment, bundle);
             }
         };
-//      FOR TEST -> TO BE REMOVED IF NOT NEEDED
-        Cursor dbCursorAllData = dbService.getData();
-        while (dbCursorAllData.moveToNext()) {
-            System.out.println(dbCursorAllData.getString(0) + ","
-                    + dbCursorAllData.getString(1) + ","
-                    + dbCursorAllData.getString(2) + ","
-                    + dbCursorAllData.getString(3) + ","
-                    + dbCursorAllData.getInt(4));
-        }
+
         String formattedDate = LocalDate.now().format(stringDateFormat);
         Cursor dbCursor = dbService.getDataByDate(formattedDate);
         while (dbCursor.moveToNext()) {
             boolean isDone = (dbCursor.getInt(1) != 0);
-            LocalDate dueDate = LocalDate.parse(dbCursor.getString(2), stringDateFormat);
+            LocalDate dueDate = LocalDate.parse(
+                    dbCursor.getString(dbCursor.getColumnIndex("due_date"))
+            );
             todayTaskList.add(new TodoTask(
-                            dbCursor.getInt(0),
+                            dbCursor.getInt(dbCursor.getColumnIndex("todoTask_id")),
                             isDone,
                             dueDate,
-                            dbCursor.getString(3),
-                            dbCursor.getInt(4)
+                            dbCursor.getString(dbCursor.getColumnIndex("description")),
+                            dbCursor.getInt(dbCursor.getColumnIndex("repetition"))
                     )
             );
         }
@@ -88,8 +80,8 @@ public class FirstFragment extends Fragment {
         binding.todayTasks.setAdapter(adapt);
         createRepeatTasks(todayTaskList);
 
-        binding.buttonFirst.setOnClickListener(click -> NavHostFragment.findNavController(FirstFragment.this)
-                .navigate(R.id.action_FirstFragment_to_SecondFragment));
+        binding.buttonFirst.setOnClickListener(click -> NavHostFragment.findNavController(TodayTasksFragment.this)
+                .navigate(R.id.action_TodayTasksFragment_to_CalendarViewFragment));
     }
 
     @Override
@@ -102,7 +94,6 @@ public class FirstFragment extends Fragment {
     public void createRepeatTasks(ArrayList<TodoTask> todayTasks) {
         todayTasks.stream().filter((task) -> task.getRepetition() != 0).forEach((task) -> {
             String nextRepeatDateForTask = task.getDueDate().plusDays(task.getRepetition()).format(stringDateFormat);
-            System.out.println(task.getRepetition() + "," + nextRepeatDateForTask);
             Cursor foundTask = dbService.getDataByParams(nextRepeatDateForTask, task.getDescription(), task.getRepetition());
             if (!foundTask.moveToNext()) {
                 dbService.addData(0, nextRepeatDateForTask, task.getDescription(), task.getRepetition());

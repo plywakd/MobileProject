@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -20,7 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class SecondFragment extends Fragment {
+public class CalendarViewFragment extends Fragment {
 
     private FragmentSecondBinding binding;
     public TodoDBService dbService;
@@ -48,8 +47,8 @@ public class SecondFragment extends Fragment {
                 TodoTask dataModel = (TodoTask) object;
                 Bundle bundle = new Bundle();
                 bundle.putInt("dbID", dataModel.getDbId());
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_editTodoFragment, bundle);
+                NavHostFragment.findNavController(CalendarViewFragment.this)
+                        .navigate(R.id.action_CalendarViewFragment_to_editTodoFragment, bundle);
             }
         };
         binding.tasksForDateView.setAdapter(adapter);
@@ -61,9 +60,9 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        binding.calendarView.setOnDateChangeListener(new android.widget.CalendarView.OnDateChangeListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
+            public void onSelectedDayChange(@NonNull android.widget.CalendarView calendarView, int year, int month, int day) {
                 String selectedDate = LocalDate.of(year, month + 1, day).format(stringDateFormat);
                 tasks = fetchTaskForDate(selectedDate);
                 adapter = new TodoTaskAdapter<TodoTask>(binding.getRoot().getContext(), tasks) {
@@ -75,8 +74,8 @@ public class SecondFragment extends Fragment {
                         TodoTask dataModel = (TodoTask) object;
                         Bundle bundle = new Bundle();
                         bundle.putInt("dbID", dataModel.getDbId());
-                        NavHostFragment.findNavController(SecondFragment.this)
-                                .navigate(R.id.action_SecondFragment_to_editTodoFragment, bundle);
+                        NavHostFragment.findNavController(CalendarViewFragment.this)
+                                .navigate(R.id.action_CalendarViewFragment_to_editTodoFragment, bundle);
                     }
                 };
                 binding.tasksForDateView.setAdapter(adapter);
@@ -86,8 +85,8 @@ public class SecondFragment extends Fragment {
         binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                NavHostFragment.findNavController(CalendarViewFragment.this)
+                        .navigate(R.id.action_CalendarViewFragment_to_TodayTasksFragment);
             }
         });
     }
