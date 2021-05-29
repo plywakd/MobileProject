@@ -67,6 +67,10 @@
         android:id="@+id/notCompletedTasksFragment"
         android:name="com.pam.pam_redesign.NotCompletedTasksFragment"
         android:label="@string/completed_fragment_label"
-        tools:layout="@layout/fragment_not_completed_tasks" />
+        tools:layout="@layout/fragment_not_completed_tasks" >
+        <action
+            android:id="@+id/action_notCompletedTasksFragment_to_editTodoFragment"
+            app:destination="@id/editTodoFragment" />
+    </fragment>
 
 </navigation>

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.pam.pam_redesign.databinding.FragmentNotCompletedTasksBinding;
 
@@ -57,9 +58,9 @@ public class NotCompletedTasksFragment extends Fragment {
                 Object object = getItem(position);
                 TodoTask dataModel = (TodoTask) object;
                 Bundle bundle = new Bundle();
-//                bundle.putInt("dbID", dataModel.getDbId());
-//                NavHostFragment.findNavController(CompletedTasksFragment.this)
-//                        .navigate(R.id.action_TodayTasksFragment_to_editTodoFragment, bundle);
+                bundle.putInt("dbID", dataModel.getDbId());
+                NavHostFragment.findNavController(NotCompletedTasksFragment.this)
+                        .navigate(R.id.action_notCompletedTasksFragment_to_editTodoFragment, bundle);
             }
         };
 
