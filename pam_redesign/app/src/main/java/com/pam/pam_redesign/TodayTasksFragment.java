@@ -80,7 +80,8 @@ public class TodayTasksFragment extends Fragment {
         binding.todayTasks.setAdapter(adapt);
         createRepeatTasks(todayTaskList);
 
-        binding.buttonFirst.setOnClickListener(click -> NavHostFragment.findNavController(TodayTasksFragment.this)
+        binding.buttonFirst.setOnClickListener(click ->
+                NavHostFragment.findNavController(TodayTasksFragment.this)
                 .navigate(R.id.action_TodayTasksFragment_to_CalendarViewFragment));
     }
 
@@ -93,10 +94,20 @@ public class TodayTasksFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void createRepeatTasks(ArrayList<TodoTask> todayTasks) {
         todayTasks.stream().filter((task) -> task.getRepetition() != 0).forEach((task) -> {
-            String nextRepeatDateForTask = task.getDueDate().plusDays(task.getRepetition()).format(stringDateFormat);
-            Cursor foundTask = dbService.getDataByParams(nextRepeatDateForTask, task.getDescription(), task.getRepetition());
+            String nextRepeatDateForTask = task
+                    .getDueDate()
+                    .plusDays(task.getRepetition())
+                    .format(stringDateFormat);
+            Cursor foundTask = dbService.getDataByParams(
+                    nextRepeatDateForTask, task.getDescription(), task.getRepetition()
+            );
             if (!foundTask.moveToNext()) {
-                dbService.addData(0, nextRepeatDateForTask, task.getDescription(), task.getRepetition());
+                dbService.addData(
+                        0,
+                        nextRepeatDateForTask,
+                        task.getDescription(),
+                        task.getRepetition()
+                );
             }
         });
     }

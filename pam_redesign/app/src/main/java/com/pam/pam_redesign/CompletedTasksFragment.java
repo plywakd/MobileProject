@@ -3,18 +3,15 @@ package com.pam.pam_redesign;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+
 import com.pam.pam_redesign.databinding.FragmentCompletedTasksBinding;
-import com.pam.pam_redesign.databinding.FragmentIncomingTasksBinding;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -60,9 +57,6 @@ public class CompletedTasksFragment extends Fragment {
                 Object object = getItem(position);
                 TodoTask dataModel = (TodoTask) object;
                 Bundle bundle = new Bundle();
-//                bundle.putInt("dbID", dataModel.getDbId());
-//                NavHostFragment.findNavController(CompletedTasksFragment.this)
-//                        .navigate(R.id.action_TodayTasksFragment_to_editTodoFragment, bundle);
             }
         };
 

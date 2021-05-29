@@ -80,21 +80,22 @@ public class AddTodoFragment extends Fragment {
             }
         });
 
-
         binding.addNewTodo.setOnClickListener((click) -> {
             repeatOptionInDays = binding.inputRepetition.getText().toString().equals("")
                     ? 0 : Integer.parseInt(binding.inputRepetition.getText().toString());
-
-            dbService.addData(
-                    0,
-                    todoDueDate.toString(),
-                    binding.inputDescription.getText().toString(),
-                    repeatOptionInDays
-            );
-            NavHostFragment.findNavController(AddTodoFragment.this)
-                    .navigate(R.id.action_addTodoFragment_to_TodayTasksFragment);
+            if (binding.inputDescription.getText().toString().equals("")) {
+                displayMessage("Please input some description!");
+            } else {
+                dbService.addData(
+                        0,
+                        todoDueDate.toString(),
+                        binding.inputDescription.getText().toString(),
+                        repeatOptionInDays
+                );
+                NavHostFragment.findNavController(AddTodoFragment.this)
+                        .navigate(R.id.action_addTodoFragment_to_TodayTasksFragment);
+            }
         });
-
     }
 
     @Override
@@ -104,7 +105,7 @@ public class AddTodoFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void setTaskDateFromCalendarView(){
+    public void setTaskDateFromCalendarView() {
         String dateFormat = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.GERMAN);
         LocalDate choosenDate = LocalDate.parse(formatter.format(myCalendar.getTime()));

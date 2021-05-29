@@ -151,7 +151,6 @@ public class EditTodoFragment extends Fragment {
             );
             String newDateForTask = taskDate.plusDays(repetition).format(stringDateFormat);
             if (foundTask.moveToNext()) {
-                System.out.println("in edit repeat "+ foundTask.getInt(foundTask.getColumnIndex("todoTask_id")));
                 dbService.updateData(
                         foundTask.getInt(foundTask.getColumnIndex("todoTask_id")),
                         0,

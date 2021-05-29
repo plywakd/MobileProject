@@ -50,7 +50,6 @@ public class IncomingTasksFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.searchIncomingTasks.setOnClickListener((click) -> {
-            System.out.println(binding.inputIncomingDays.getText().toString());
             if (binding.inputIncomingDays.getText().toString().equals("")) {
                 displayMessage("Please input days number for incoming tasks range");
             } else {
