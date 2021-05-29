@@ -28,7 +28,7 @@ public class CompletedTasksFragment extends Fragment {
     private FragmentCompletedTasksBinding binding;
     public TodoDBService dbService;
     public DateTimeFormatter stringDateFormat;
-    private ArrayList<TodoTask> completedTasksList;
+    private ArrayList<TodoTask> completedTaskList;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -40,7 +40,7 @@ public class CompletedTasksFragment extends Fragment {
         binding = FragmentCompletedTasksBinding.inflate(inflater, container, false);
         dbService = new TodoDBService(binding.getRoot().getContext());
         stringDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        completedTasksList = new ArrayList<>();
+        completedTaskList = new ArrayList<>();
         return binding.getRoot();
 
     }
@@ -51,7 +51,7 @@ public class CompletedTasksFragment extends Fragment {
 
         TodoTaskAdapterWithDate<TodoTask> adapt = new TodoTaskAdapterWithDate<TodoTask>(
                 this.binding.getRoot().getContext(),
-                completedTasksList
+                completedTaskList
         ) {
             @Override
             public void onClickToEdit(View v) {
@@ -72,7 +72,7 @@ public class CompletedTasksFragment extends Fragment {
             LocalDate dueDate = LocalDate.parse(
                     dbCursor.getString(dbCursor.getColumnIndex("due_date"))
             );
-            completedTasksList.add(new TodoTask(
+            completedTaskList.add(new TodoTask(
                             dbCursor.getInt(dbCursor.getColumnIndex("todoTask_id")),
                             isDone,
                             dueDate,

@@ -53,7 +53,11 @@
         android:id="@+id/incomingTasksFragment"
         android:name="com.pam.pam_redesign.IncomingTasksFragment"
         android:label="@string/incoming_tasks_label"
-        tools:layout="@layout/fragment_incoming_tasks" />
+        tools:layout="@layout/fragment_incoming_tasks" >
+        <action
+            android:id="@+id/action_incomingTasksFragment_to_editTodoFragment"
+            app:destination="@id/editTodoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/completedTasksFragment"
         android:name="com.pam.pam_redesign.CompletedTasksFragment"

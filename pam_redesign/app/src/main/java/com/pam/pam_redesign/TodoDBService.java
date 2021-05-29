@@ -9,7 +9,6 @@ import android.util.Log;
 
 public class TodoDBService extends SQLiteOpenHelper {
 
-    //  TODO this whole section looks good but needs to be checked, maybe more methods are needed?
     private static final String TAG = "DatabaseService";
 
     private static final String TABLE_NAME = "TodoTask_table";
@@ -79,6 +78,15 @@ public class TodoDBService extends SQLiteOpenHelper {
         return db.rawQuery(query, null);
     }
 
+    public Cursor getDataBetweenDateRange(String dateFrom, String dateTo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = String.format(
+                "SELECT * FROM %s WHERE due_date BETWEEN '%s' AND '%s' ORDER BY due_date ASC",
+                TABLE_NAME, dateFrom, dateTo
+        );
+        return db.rawQuery(query, null);
+    }
+
     public void deleteById(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME + " WHERE todoTask_id=" + id;
@@ -100,7 +108,10 @@ public class TodoDBService extends SQLiteOpenHelper {
 
     public Cursor getDataByParams(String date, String desc, Integer repetition) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = String.format("SELECT * FROM %s WHERE due_date='%s' AND description='%s' AND repetition='%d'", TABLE_NAME, date, desc, repetition);
+        String query = String.format(
+                "SELECT * FROM %s WHERE due_date='%s' AND description='%s' AND repetition='%d'",
+                TABLE_NAME, date, desc, repetition
+        );
         return db.rawQuery(query, null);
     }
 }

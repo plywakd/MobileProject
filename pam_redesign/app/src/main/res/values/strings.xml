@@ -22,9 +22,10 @@
     <string name="repeatInfoText">Day/days</string>
     <string name="todoIsDoneViewHeader">Done</string>
     <string name="todoRepetitionViewHeader">Repeat</string>
+    <string name="todoDueDateViewHeader">Due Date</string>
     <string name="todoDescriptionViewHeader">Description</string>
+    <string name="incomingTasksTextView">Show tasks for next : </string>
+    <string name="searchTasksForIncoming">Search</string>
 
-    <string name="hello_first_fragment">Show here today tasks!</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
