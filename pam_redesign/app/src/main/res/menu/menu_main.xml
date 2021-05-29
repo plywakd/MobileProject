@@ -3,8 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.pam.pam_redesign.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_calendar_view"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_calendar_view"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_incoming_tasks_view"
+        android:orderInCategory="100"
+        android:title="@string/action_incoming_tasks_view"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_not_completed_view"
+        android:orderInCategory="100"
+        android:title="@string/action_not_completed_view"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_completed_view"
+        android:orderInCategory="100"
+        android:title="@string/action_calendar_view"
         app:showAsAction="never" />
 </menu>

@@ -49,5 +49,20 @@
             android:id="@+id/action_editTodoFragment_to_TodayTasksFragment"
             app:destination="@id/TodayTasksFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/incomingTasksFragment"
+        android:name="com.pam.pam_redesign.IncomingTasksFragment"
+        android:label="fragment_incoming_tasks"
+        tools:layout="@layout/fragment_incoming_tasks" />
+    <fragment
+        android:id="@+id/completedTasksFragment"
+        android:name="com.pam.pam_redesign.CompletedTasksFragment"
+        android:label="fragment_completed_tasks"
+        tools:layout="@layout/fragment_completed_tasks" />
+    <fragment
+        android:id="@+id/notCompletedTasksFragment"
+        android:name="com.pam.pam_redesign.NotCompletedTasksFragment"
+        android:label="fragment_not_completed_tasks"
+        tools:layout="@layout/fragment_not_completed_tasks" />
 
 </navigation>
