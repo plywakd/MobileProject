@@ -70,6 +70,15 @@ public class TodoDBService extends SQLiteOpenHelper {
         return db.rawQuery(query, null);
     }
 
+    public Cursor getDataByDone(Integer isDone, String orderByDateOption) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = String.format(
+                "SELECT * FROM %s WHERE done=%d ORDER BY due_date %s",
+                TABLE_NAME, isDone, orderByDateOption
+        );
+        return db.rawQuery(query, null);
+    }
+
     public void deleteById(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DELETE FROM " + TABLE_NAME + " WHERE todoTask_id=" + id;

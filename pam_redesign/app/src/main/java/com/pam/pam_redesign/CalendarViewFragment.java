@@ -13,7 +13,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.pam.pam_redesign.databinding.FragmentSecondBinding;
+import com.pam.pam_redesign.databinding.FragmentCalendarViewBinding;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class CalendarViewFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private FragmentCalendarViewBinding binding;
     public TodoDBService dbService;
     public ArrayList<TodoTask> tasks;
     private ArrayAdapter<TodoTask> adapter;
@@ -34,7 +34,7 @@ public class CalendarViewFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = FragmentCalendarViewBinding.inflate(inflater, container, false);
         dbService = new TodoDBService(binding.getRoot().getContext());
         stringDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         tasks = fetchTaskForDate(LocalDate.now().format(stringDateFormat));

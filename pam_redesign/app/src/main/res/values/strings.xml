@@ -5,8 +5,11 @@
     <string name="action_not_completed_view">Move to Not Completed</string>
     <string name="action_completed_view">Move to Completed</string>
 
-    <string name="first_fragment_label">TODOs</string>
-    <string name="second_fragment_label">Calendar</string>
+    <string name="today_tasks_fragment_label">TODOs</string>
+    <string name="calendar_fragment_label">Calendar</string>
+    <string name="completed_fragment_label">Not Completed Tasks</string>
+    <string name="not_completed_fragment_label">Completed - Archive</string>
+    <string name="incoming_tasks_label">Incoming TODOs</string>
     <string name="next">Move to Calendar</string>
     <string name="previous">Back</string>
     <string name="input_desc">Description</string>

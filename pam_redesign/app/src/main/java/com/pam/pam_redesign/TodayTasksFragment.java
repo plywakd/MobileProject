@@ -12,7 +12,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.pam.pam_redesign.databinding.FragmentFirstBinding;
+import com.pam.pam_redesign.databinding.FragmentTodayTasksBinding;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class TodayTasksFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentTodayTasksBinding binding;
     public TodoDBService dbService;
     public DateTimeFormatter stringDateFormat;
     private ArrayList<TodoTask> todayTaskList;
@@ -34,7 +34,7 @@ public class TodayTasksFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentTodayTasksBinding.inflate(inflater, container, false);
         dbService = new TodoDBService(binding.getRoot().getContext());
         stringDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         todayTaskList = new ArrayList<>();
