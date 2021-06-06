@@ -34,7 +34,7 @@
     <fragment
         android:id="@+id/addTodoFragment"
         android:name="com.pam.pam_redesign.AddTodoFragment"
-        android:label="fragment_add_todo"
+        android:label="@string/add_todo_fragment_label"
         tools:layout="@layout/fragment_add_todo" >
         <action
             android:id="@+id/action_addTodoFragment_to_TodayTasksFragment"
@@ -43,7 +43,7 @@
     <fragment
         android:id="@+id/editTodoFragment"
         android:name="com.pam.pam_redesign.EditTodoFragment"
-        android:label="fragment_edit_todo"
+        android:label="@string/edit_todo_fragment_label"
         tools:layout="@layout/fragment_edit_todo" >
         <action
             android:id="@+id/action_editTodoFragment_to_TodayTasksFragment"

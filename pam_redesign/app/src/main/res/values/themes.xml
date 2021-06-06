@@ -21,5 +21,8 @@
 
     <style name="Theme.Pam_redesign.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.Pam_redesign.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Pam_redesign.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@color/purple_200</item>
+    </style>
+
 </resources>
