@@ -78,6 +78,7 @@ public class AddTodoFragment extends Fragment {
             } else {
                 binding.inputRepetition.setVisibility(View.INVISIBLE);
             }
+            binding.inputRepetition.setText("");
         });
 
         binding.addNewTodo.setOnClickListener((click) -> {

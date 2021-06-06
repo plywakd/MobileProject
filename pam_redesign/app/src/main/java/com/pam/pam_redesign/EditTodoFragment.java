@@ -74,6 +74,7 @@ public class EditTodoFragment extends Fragment {
                 binding.inputRepetition.setVisibility(View.INVISIBLE);
             }
             repeatOptionInDays = 0;
+            binding.inputRepetition.setText("");
         });
 
         binding.updateTodo.setOnClickListener(click -> {
